@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collection - Artisan Ceramics Gallery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        .ceramic-gradient {
+            background: linear-gradient(135deg, #e6d7c3 0%, #d4c4a8 50%, #c3b091 100%);
+        }
+        .hero-pattern {
+            background-image: radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 0%, transparent 50%);
+            will-change: transform;
+        }
+        /* Animation classes are now in styles.css for better performance */
+        
+        /* Gallery specific styles */
+        .gallery-item {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform, opacity;
+        }
+        
+        .gallery-item:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .filter-btn {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .filter-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .filter-btn:hover::before {
+            left: 100%;
+        }
+        
+        .filter-btn.active {
+            background: linear-gradient(135deg, #f59e0b, #ea580c);
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .masonry-grid {
+            columns: 3;
+            column-gap: 1.5rem;
+        }
+        
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 1.5rem;
+        }
+        
+        @media (max-width: 1024px) {
+            .masonry-grid {
+                columns: 2;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .masonry-grid {
+                columns: 1;
+            }
+        }
+        
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .lightbox.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90%;
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+        }
+        
+        .lightbox.active .lightbox-content {
+            transform: scale(1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-white/90 backdrop-blur-md shadow-lg transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-600 rounded-full flex items-center justify-center mr-3">
+                        <i class="fas fa-mug-hot text-white text-lg"></i>
+                    </div>
+                    <span class="text-2xl font-bold text-gray-800">Artisan Ceramics</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="index.html" class="nav-link text-gray-700 hover:text-amber-600 transition-colors duration-300">Home</a>
+                    <a href="about.html" class="nav-link text-gray-700 hover:text-amber-600 transition-colors duration-300">About</a>
+                    <a href="services.html" class="nav-link text-gray-700 hover:text-amber-600 transition-colors duration-300">Services</a>
+                    <a href="collection.html" class="nav-link text-amber-600 font-semibold">Collection</a>
+                    <a href="contact.html" class="nav-link text-gray-700 hover:text-amber-600 transition-colors duration-300">Contact</a>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-gray-700 hover:text-amber-600">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+            <div class="px-4 py-2 space-y-2">
+                <a href="index.html" class="block py-2 text-gray-700 hover:text-amber-600">Home</a>
+                <a href="about.html" class="block py-2 text-gray-700 hover:text-amber-600">About</a>
+                <a href="services.html" class="block py-2 text-gray-700 hover:text-amber-600">Services</a>
+                <a href="collection.html" class="block py-2 text-amber-600 font-semibold">Collection</a>
+                <a href="contact.html" class="block py-2 text-gray-700 hover:text-amber-600">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-16 gradient-bg hero-pattern relative overflow-hidden">
+        <div class="absolute inset-0">
+            <div class="absolute top-20 left-10 w-32 h-32 bg-amber-200/30 rounded-full floating"></div>
+            <div class="absolute top-40 right-20 w-24 h-24 bg-orange-200/30 rounded-full floating" style="animation-delay: 1s;"></div>
+            <div class="absolute bottom-20 left-1/4 w-20 h-20 bg-yellow-200/30 rounded-full floating" style="animation-delay: 2s;"></div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center fade-in">
+                <h1 class="text-5xl lg:text-7xl font-bold text-gray-800 mb-6 leading-tight">
+                    Our 
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-orange-600">Collection</span>
+                </h1>
+                <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
+                    Explore our curated collection of handcrafted ceramics, each piece telling a unique story of artistry and tradition.
+                </p>
+                <div class="flex justify-center">
+                    <a href="#gallery" class="bg-gradient-to-r from-amber-500 to-orange-600 text-white px-8 py-4 rounded-full font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300 pulse-glow">
+                        Explore Gallery
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filter Section -->
+    <section class="py-12 bg-white border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-8 fade-in">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Filter by Category</h2>
+                <p class="text-gray-600">Discover pieces that match your style and preferences</p>
+            </div>
+            
+            <div class="flex flex-wrap justify-center gap-4 slide-in-left">
+                <button class="filter-btn active px-6 py-3 rounded-full border-2 border-amber-500 text-amber-600 font-semibold hover:bg-amber-500 hover:text-white transition-all duration-300" data-filter="all">
+                    All Pieces
+                </button>
+                <button class="filter-btn px-6 py-3 rounded-full border-2 border-amber-500 text-amber-600 font-semibold hover:bg-amber-500 hover:text-white transition-all duration-300" data-filter="vases">
+                    Vases
+                </button>
+                <button class="filter-btn px-6 py-3 rounded-full border-2 border-amber-500 text-amber-600 font-semibold hover:bg-amber-500 hover:text-white transition-all duration-300" data-filter="bowls">
+                    Bowls
+                </button>
+                <button class="filter-btn px-6 py-3 rounded-full border-2 border-amber-500 text-amber-600 font-semibold hover:bg-amber-500 hover:text-white transition-all duration-300" data-filter="plates">
+                    Plates
+                </button>
+                <button class="filter-btn px-6 py-3 rounded-full border-2 border-amber-500 text-amber-600 font-semibold hover:bg-amber-500 hover:text-white transition-all duration-300" data-filter="decorative">
+                    Decorative
+                </button>
+                <button class="filter-btn px-6 py-3 rounded-full border-2 border-amber-500 text-amber-600 font-semibold hover:bg-amber-500 hover:text-white transition-all duration-300" data-filter="functional">
+                    Functional
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-20 ceramic-gradient">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="masonry-grid">
+                <!-- Vase 1 -->
+                <div class="masonry-item gallery-item" data-category="vases decorative">
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-lg">
+                        <div class="relative overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                                 alt="Elegant Ceramic Vase" class="w-full h-80 object-cover gallery-image">
+                            <div class="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                <button class="lightbox-btn bg-white/90 text-gray-800 px-6 py-3 rounded-full font-semibold hover:bg-white transition-all duration-300 transform hover:scale-105">
+                                    <i class="fas fa-expand-alt mr-2"></i>View Details
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">Elegant Ceramic Vase</h3>
+                            <p class="text-gray-600 mb-4">Hand-thrown vase with intricate glaze patterns</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-2xl font-bold text-amber-600">₹180</span>
+                                <span class="text-sm text-gray-500">Vase • Decorative</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bowl 1 -->
+                <div class="masonry-item gallery-item" data-category="bowls functional">
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-lg">
+                        <div class="relative overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                                 alt="Artisan Bowl Set" class="w-full h-64 object-cover gallery-image">
+                            <div class="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                <button class="lightbox-btn bg-white/90 text-gray-800 px-6 py-3 rounded-full font-semibold hover:bg-white transition-all duration-300 transform hover:scale-105">
+                                    <i class="fas fa-expand-alt mr-2"></i>View Details
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">Artisan Bowl Set</h3>
+                            <p class="text-gray-600 mb-4">Set of 4 handcrafted serving bowls</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-2xl font-bold text-amber-600">₹120</span>
+                                <span class="text-sm text-gray-500">Bowls • Functional</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Plate 1 -->
+                <div class="masonry-item gallery-item" data-category="plates functional">
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-lg">
+                        <div class="relative overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                                 alt="Decorative Plate Collection" class="w-full h-72 object-cover gallery-image">
+                            <div class="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                <button class="lightbox-btn bg-white/90 text-gray-800 px-6 py-3 rounded-full font-semibold hover:bg-white transition-all duration-300 transform hover:scale-105">
+                                    <i class="fas fa-expand-alt mr-2"></i>View Details
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">Decorative Plate Collection</h3>
+                            <p class="text-gray-600 mb-4">Hand-painted plates with traditional motifs</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-2xl font-bold text-amber-600">₹95</span>
+                                <span class="text-sm text-gray-500">Plates • Functional</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Decorative Piece 1 -->
+                <div class="masonry-item gallery-item" data-category="decorative">
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-lg">
+                        <div class="relative overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                                 alt="Sculptural Art Piece" class="w-full h-96 object-cover gallery-image">
+                            <div class="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                <button class="lightbox-btn bg-white/90 text-gray-800 px-6 py-3 rounded-full font-semibold hover:bg-white transition-all duration-300 transform hover:scale-105">
+                                    <i class="fas fa-expand-alt mr-2"></i>View Details
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">Sculptural Art Piece</h3>
+                            <p class="text-gray-600 mb-4">Contemporary ceramic sculpture</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-2xl font-bold text-amber-600">₹350</span>
+                                <span class="text-sm text-gray-500">Sculpture • Decorative</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vase 2 -->
+                <div class="masonry-item gallery-item" data-category="vases decorative">
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-lg">
+                        <div class="relative overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                                 alt="Modern Minimalist Vase" class="w-full h-80 object-cover gallery-image">
+                            <div class="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                <button class="lightbox-btn bg-white/90 text-gray-800 px-6 py-3 rounded-full font-semibold hover:bg-white transition-all duration-300 transform hover:scale-105">
+                                    <i class="fas fa-expand-alt mr-2"></i>View Details
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">Modern Minimalist Vase</h3>
+                            <p class="text-gray-600 mb-4">Clean lines with subtle texture</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-2xl font-bold text-amber-600">₹220</span>
+                                <span class="text-sm text-gray-500">Vase • Decorative</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bowl 2 -->
+                <div class="masonry-item gallery-item" data-category="bowls functional">
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-lg">
+                        <div class="relative overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                                 alt="Nesting Bowl Set" class="w-full h-64 object-cover gallery-image">
+                            <div class="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                <button class="lightbox-btn bg-white/90 text-gray-800 px-6 py-3 rounded-full font-semibold hover:bg-white transition-all duration-300 transform hover:scale-105">
+                                    <i class="fas fa-expand-alt mr-2"></i>View Details
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">Nesting Bowl Set</h3>
+                            <p class="text-gray-600 mb-4">Stackable bowls for everyday use</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-2xl font-bold text-amber-600">₹85</span>
+                                <span class="text-sm text-gray-500">Bowls • Functional</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Plate 2 -->
+                <div class="masonry-item gallery-item" data-category="plates decorative">
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-lg">
+                        <div class="relative overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                                 alt="Wall Art Plate" class="w-full h-72 object-cover gallery-image">
+                            <div class="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                <button class="lightbox-btn bg-white/90 text-gray-800 px-6 py-3 rounded-full font-semibold hover:bg-white transition-all duration-300 transform hover:scale-105">
+                                    <i class="fas fa-expand-alt mr-2"></i>View Details
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">Wall Art Plate</h3>
+                            <p class="text-gray-600 mb-4">Decorative plate for wall display</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-2xl font-bold text-amber-600">₹75</span>
+                                <span class="text-sm text-gray-500">Plate • Decorative</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Functional Piece -->
+                <div class="masonry-item gallery-item" data-category="functional">
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-lg">
+                        <div class="relative overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                                 alt="Tea Set Collection" class="w-full h-80 object-cover gallery-image">
+                            <div class="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                <button class="lightbox-btn bg-white/90 text-gray-800 px-6 py-3 rounded-full font-semibold hover:bg-white transition-all duration-300 transform hover:scale-105">
+                                    <i class="fas fa-expand-alt mr-2"></i>View Details
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">Tea Set Collection</h3>
+                            <p class="text-gray-600 mb-4">Complete tea service for 4 people</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-2xl font-bold text-amber-600">₹280</span>
+                                <span class="text-sm text-gray-500">Tea Set • Functional</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Decorative Piece 2 -->
+                <div class="masonry-item gallery-item" data-category="decorative">
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-lg">
+                        <div class="relative overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                                 alt="Abstract Ceramic Art" class="w-full h-88 object-cover gallery-image">
+                            <div class="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                <button class="lightbox-btn bg-white/90 text-gray-800 px-6 py-3 rounded-full font-semibold hover:bg-white transition-all duration-300 transform hover:scale-105">
+                                    <i class="fas fa-expand-alt mr-2"></i>View Details
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">Abstract Ceramic Art</h3>
+                            <p class="text-gray-600 mb-4">Unique abstract form with organic textures</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-2xl font-bold text-amber-600">₹420</span>
+                                <span class="text-sm text-gray-500">Art Piece • Decorative</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <div class="lightbox-content">
+            <img src="" alt="" class="max-w-full max-h-full object-contain">
+            <button class="absolute top-4 right-4 text-white text-2xl hover:text-gray-300 transition-colors duration-300" id="close-lightbox">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="fade-in">
+                <h2 class="text-4xl font-bold text-gray-800 mb-6">Interested in a Custom Piece?</h2>
+                <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+                    Can't find exactly what you're looking for? We'd love to create a custom piece just for you.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="contact.html" class="bg-gradient-to-r from-amber-500 to-orange-600 text-white px-8 py-4 rounded-full font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300 pulse-glow">
+                        Request Custom Design
+                    </a>
+                    <a href="services.html" class="border-2 border-amber-500 text-amber-600 px-8 py-4 rounded-full font-semibold hover:bg-amber-500 hover:text-white transition-all duration-300">
+                        View Our Services
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-600 rounded-full flex items-center justify-center mr-3">
+                            <i class="fas fa-mug-hot text-white"></i>
+                        </div>
+                        <span class="text-xl font-bold">Artisan Ceramics</span>
+                    </div>
+                    <p class="text-gray-400">
+                        Creating beautiful ceramics with passion and precision since 1990.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-400 hover:text-amber-400 transition-colors duration-300">Home</a></li>
+                        <li><a href="about.html" class="text-gray-400 hover:text-amber-400 transition-colors duration-300">About</a></li>
+                        <li><a href="services.html" class="text-gray-400 hover:text-amber-400 transition-colors duration-300">Services</a></li>
+                        <li><a href="collection.html" class="text-amber-400 font-semibold">Collection</a></li>
+                        <li><a href="contact.html" class="text-gray-400 hover:text-amber-400 transition-colors duration-300">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Categories</h4>
+                    <ul class="space-y-2">
+                        <li><a href="collection.html" class="text-gray-400 hover:text-amber-400 transition-colors duration-300">Vases</a></li>
+                        <li><a href="collection.html" class="text-gray-400 hover:text-amber-400 transition-colors duration-300">Bowls</a></li>
+                        <li><a href="collection.html" class="text-gray-400 hover:text-amber-400 transition-colors duration-300">Plates</a></li>
+                        <li><a href="collection.html" class="text-gray-400 hover:text-amber-400 transition-colors duration-300">Decorative</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Follow Us</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center hover:bg-amber-700 transition-colors duration-300">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center hover:bg-amber-700 transition-colors duration-300">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center hover:bg-amber-700 transition-colors duration-300">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center">
+                <p class="text-gray-400">
+                    © 2024 Artisan Ceramics. All rights reserved <a class="text-amber-400" href="https://github.com/Anticoder03" target="_blank"> Anticoder03</a>.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Gallery specific JavaScript
+        ₹(document).ready(function() {
+            // Filter functionality
+            ₹('.filter-btn').on('click', function() {
+                const filter = ₹(this).data('filter');
+                
+                // Update active button
+                ₹('.filter-btn').removeClass('active');
+                ₹(this).addClass('active');
+                
+                // Filter gallery items
+                if (filter === 'all') {
+                    ₹('.gallery-item').fadeIn(400);
+                } else {
+                    ₹('.gallery-item').fadeOut(200);
+                    ₹(`.gallery-item[data-category*="₹{filter}"]`).fadeIn(400);
+                }
+            });
+
+            // Lightbox functionality
+            ₹('.lightbox-btn').on('click', function() {
+                const imgSrc = ₹(this).closest('.gallery-item').find('.gallery-image').attr('src');
+                const imgAlt = ₹(this).closest('.gallery-item').find('.gallery-image').attr('alt');
+                
+                ₹('#lightbox img').attr('src', imgSrc).attr('alt', imgAlt);
+                ₹('#lightbox').addClass('active');
+                ₹('body').css('overflow', 'hidden');
+            });
+
+            ₹('#close-lightbox').on('click', function() {
+                ₹('#lightbox').removeClass('active');
+                ₹('body').css('overflow', 'auto');
+            });
+
+            // Close lightbox on background click
+            ₹('#lightbox').on('click', function(e) {
+                if (e.target === this) {
+                    ₹(this).removeClass('active');
+                    ₹('body').css('overflow', 'auto');
+                }
+            });
+
+            // Close lightbox on escape key
+            ₹(document).on('keydown', function(e) {
+                if (e.key === 'Escape' && ₹('#lightbox').hasClass('active')) {
+                    ₹('#lightbox').removeClass('active');
+                    ₹('body').css('overflow', 'auto');
+                }
+            });
+
+            // Animate gallery items on scroll
+            const galleryObserver = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            ₹('.gallery-item').each(function() {
+                ₹(this).css({
+                    opacity: '0',
+                    transform: 'translateY(30px)',
+                    transition: 'all 0.6s ease'
+                });
+                galleryObserver.observe(this);
+            });
+        });
+    </script>
+</body>
+</html> 
