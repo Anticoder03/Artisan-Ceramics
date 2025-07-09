@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Artisan Ceramics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        .ceramic-gradient {
+            background: linear-gradient(135deg, #e6d7c3 0%, #d4c4a8 50%, #c3b091 100%);
+        }
+        .hero-pattern {
+            background-image: radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 0%, transparent 50%);
+        }
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .slide-in-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 0.8s ease;
+        }
+        .slide-in-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .slide-in-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 0.8s ease;
+        }
+        .slide-in-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .scale-in {
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.8s ease;
+        }
+        .scale-in.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .rotate-slow {
+            animation: rotate 20s linear infinite;
+        }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite alternate;
+        }
+        @keyframes pulse-glow {
+            from { box-shadow: 0 0 20px rgba(194, 176, 145, 0.3); }
+            to { box-shadow: 0 0 30px rgba(194, 176, 145, 0.6); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-white/90 backdrop-blur-md shadow-lg transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-600 rounded-full flex items-center justify-center mr-3">
+                        <i class="fas fa-mug-hot text-white text-lg"></i>
+                    </div>
+                    <span class="text-2xl font-bold text-gray-800">Artisan Ceramics</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="index.html" class="nav-link text-gray-700 hover:text-amber-600 transition-colors duration-300">Home</a>
+                    <a href="about.html" class="nav-link text-amber-600 font-semibold">About</a>
+                    <a href="services.html" class="nav-link text-gray-700 hover:text-amber-600 transition-colors duration-300">Services</a>
+                    <a href="contact.html" class="nav-link text-gray-700 hover:text-amber-600 transition-colors duration-300">Contact</a>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-gray-700 hover:text-amber-600">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+            <div class="px-4 py-2 space-y-2">
+                <a href="index.html" class="block py-2 text-gray-700 hover:text-amber-600">Home</a>
+                <a href="about.html" class="block py-2 text-amber-600 font-semibold">About</a>
+                <a href="services.html" class="block py-2 text-gray-700 hover:text-amber-600">Services</a>
+                <a href="contact.html" class="block py-2 text-gray-700 hover:text-amber-600">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-16 gradient-bg hero-pattern relative overflow-hidden">
+        <div class="absolute inset-0">
+            <div class="absolute top-20 left-10 w-32 h-32 bg-amber-200/30 rounded-full floating"></div>
+            <div class="absolute top-40 right-20 w-24 h-24 bg-orange-200/30 rounded-full floating" style="animation-delay: 1s;"></div>
+            <div class="absolute bottom-20 left-1/4 w-20 h-20 bg-yellow-200/30 rounded-full floating" style="animation-delay: 2s;"></div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center fade-in">
+                <h1 class="text-5xl lg:text-7xl font-bold text-gray-800 mb-6 leading-tight">
+                    Our 
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-orange-600">Story</span>
+                </h1>
+                <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
+                    Discover the passion, tradition, and craftsmanship that drives our ceramic artistry. Every piece tells a story of dedication and creativity.
+                </p>
+                <div class="flex justify-center">
+                    <a href="#timeline" class="bg-gradient-to-r from-amber-500 to-orange-600 text-white px-8 py-4 rounded-full font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300 pulse-glow">
+                        Explore Our Journey
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission & Vision -->
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="slide-in-left">
+                    <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                         alt="Ceramic Workshop" class="w-full h-96 object-cover rounded-2xl shadow-xl">
+                </div>
+                <div class="slide-in-right">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-6">Our Mission</h2>
+                    <p class="text-gray-600 mb-6 leading-relaxed">
+                        To preserve the ancient art of ceramics while embracing modern design principles, creating pieces that bridge tradition and contemporary aesthetics. We believe that every ceramic piece should not only be functional but also tell a story of craftsmanship and passion.
+                    </p>
+                    <p class="text-gray-600 mb-8 leading-relaxed">
+                        Our commitment to quality extends beyond the finished product. We source the finest materials, employ time-tested techniques, and maintain the highest standards of artistry in every piece we create.
+                    </p>
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="text-center p-4 bg-amber-50 rounded-lg">
+                            <i class="fas fa-heart text-3xl text-amber-600 mb-3"></i>
+                            <h4 class="font-semibold text-gray-800 mb-2">Passion</h4>
+                            <p class="text-sm text-gray-600">Love for the craft</p>
+                        </div>
+                        <div class="text-center p-4 bg-amber-50 rounded-lg">
+                            <i class="fas fa-award text-3xl text-amber-600 mb-3"></i>
+                            <h4 class="font-semibold text-gray-800 mb-2">Quality</h4>
+                            <p class="text-sm text-gray-600">Excellence in every piece</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section id="timeline" class="py-20 ceramic-gradient">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">Our Journey</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Three decades of passion, innovation, and artistic excellence in ceramic craftsmanship.
+                </p>
+            </div>
+            
+            <div class="relative">
+                <!-- Timeline Line -->
+                <div class="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-amber-300"></div>
+                
+                <!-- Timeline Items -->
+                <div class="space-y-12">
+                    <!-- 1990 -->
+                    <div class="relative scale-in">
+                        <div class="flex items-center">
+                            <div class="w-1/2 pr-8 text-right">
+                                <div class="bg-white p-6 rounded-lg shadow-lg">
+                                    <h3 class="text-2xl font-bold text-gray-800 mb-2">1990</h3>
+                                    <h4 class="text-lg font-semibold text-amber-600 mb-3">The Beginning</h4>
+                                    <p class="text-gray-600">Founded in a small garage studio, we began our journey with a simple dream: to create beautiful, functional ceramics that would bring joy to people's homes.</p>
+                                </div>
+                            </div>
+                            <div class="absolute left-1/2 transform -translate-x-1/2 w-8 h-8 bg-amber-500 rounded-full border-4 border-white shadow-lg"></div>
+                            <div class="w-1/2 pl-8"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- 2000 -->
+                    <div class="relative scale-in">
+                        <div class="flex items-center">
+                            <div class="w-1/2 pr-8"></div>
+                            <div class="absolute left-1/2 transform -translate-x-1/2 w-8 h-8 bg-amber-500 rounded-full border-4 border-white shadow-lg"></div>
+                            <div class="w-1/2 pl-8">
+                                <div class="bg-white p-6 rounded-lg shadow-lg">
+                                    <h3 class="text-2xl font-bold text-gray-800 mb-2">2000</h3>
+                                    <h4 class="text-lg font-semibold text-amber-600 mb-3">First Studio</h4>
+                                    <p class="text-gray-600">Moved into our first dedicated studio space, expanding our capabilities and welcoming our first apprentices to learn the craft.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 2010 -->
+                    <div class="relative scale-in">
+                        <div class="flex items-center">
+                            <div class="w-1/2 pr-8 text-right">
+                                <div class="bg-white p-6 rounded-lg shadow-lg">
+                                    <h3 class="text-2xl font-bold text-gray-800 mb-2">2010</h3>
+                                    <h4 class="text-lg font-semibold text-amber-600 mb-3">International Recognition</h4>
+                                    <p class="text-gray-600">Our work gained international recognition, with pieces featured in galleries and museums across Europe and Asia.</p>
+                                </div>
+                            </div>
+                            <div class="absolute left-1/2 transform -translate-x-1/2 w-8 h-8 bg-amber-500 rounded-full border-4 border-white shadow-lg"></div>
+                            <div class="w-1/2 pl-8"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- 2020 -->
+                    <div class="relative scale-in">
+                        <div class="flex items-center">
+                            <div class="w-1/2 pr-8"></div>
+                            <div class="absolute left-1/2 transform -translate-x-1/2 w-8 h-8 bg-amber-500 rounded-full border-4 border-white shadow-lg"></div>
+                            <div class="w-1/2 pl-8">
+                                <div class="bg-white p-6 rounded-lg shadow-lg">
+                                    <h3 class="text-2xl font-bold text-gray-800 mb-2">2020</h3>
+                                    <h4 class="text-lg font-semibold text-amber-600 mb-3">Digital Innovation</h4>
+                                    <p class="text-gray-600">Embraced digital technologies while maintaining traditional techniques, expanding our reach through online platforms and virtual workshops.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 2024 -->
+                    <div class="relative scale-in">
+                        <div class="flex items-center">
+                            <div class="w-1/2 pr-8 text-right">
+                                <div class="bg-white p-6 rounded-lg shadow-lg">
+                                    <h3 class="text-2xl font-bold text-gray-800 mb-2">2024</h3>
+                                    <h4 class="text-lg font-semibold text-amber-600 mb-3">Future Forward</h4>
+                                    <p class="text-gray-600">Continuing to push boundaries in ceramic art, combining sustainability practices with innovative design approaches.</p>
+                                </div>
+                            </div>
+                            <div class="absolute left-1/2 transform -translate-x-1/2 w-8 h-8 bg-amber-500 rounded-full border-4 border-white shadow-lg"></div>
+                            <div class="w-1/2 pl-8"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">Meet Our Team</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    The passionate artisans behind every beautiful piece we create.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Team Member 1 -->
+                <div class="bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 scale-in group">
+                    <div class="w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&q=80" 
+                             alt="Master Potter" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2 text-center">Michael Chen</h3>
+                    <p class="text-amber-600 font-semibold text-center mb-4">Master Potter & Founder</p>
+                    <p class="text-gray-600 text-center mb-4">
+                        With over 30 years of experience, Michael leads our studio with passion and expertise, ensuring every piece meets our highest standards.
+                    </p>
+                    <div class="flex justify-center space-x-4">
+                        <a href="#" class="text-amber-600 hover:text-amber-700 transition-colors duration-300">
+                            <i class="fab fa-linkedin text-xl"></i>
+                        </a>
+                        <a href="#" class="text-amber-600 hover:text-amber-700 transition-colors duration-300">
+                            <i class="fab fa-instagram text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Team Member 2 -->
+                <div class="bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 scale-in group">
+                    <div class="w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&q=80" 
+                             alt="Designer" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2 text-center">Sarah Rodriguez</h3>
+                    <p class="text-amber-600 font-semibold text-center mb-4">Lead Designer</p>
+                    <p class="text-gray-600 text-center mb-4">
+                        Sarah brings contemporary design sensibilities to our traditional techniques, creating pieces that are both beautiful and functional.
+                    </p>
+                    <div class="flex justify-center space-x-4">
+                        <a href="#" class="text-amber-600 hover:text-amber-700 transition-colors duration-300">
+                            <i class="fab fa-linkedin text-xl"></i>
+                        </a>
+                        <a href="#" class="text-amber-600 hover:text-amber-700 transition-colors duration-300">
+                            <i class="fab fa-instagram text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Team Member 3 -->
+                <div class="bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 scale-in group">
+                    <div class="w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&q=80" 
+                             alt="Apprentice" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2 text-center">David Kim</h3>
+                    <p class="text-amber-600 font-semibold text-center mb-4">Senior Artisan</p>
+                    <p class="text-gray-600 text-center mb-4">
+                        David specializes in glazing techniques and kiln management, ensuring perfect finishes on every piece that leaves our studio.
+                    </p>
+                    <div class="flex justify-center space-x-4">
+                        <a href="#" class="text-amber-600 hover:text-amber-700 transition-colors duration-300">
+                            <i class="fab fa-linkedin text-xl"></i>
+                        </a>
+                        <a href="#" class="text-amber-600 hover:text-amber-700 transition-colors duration-300">
+                            <i class="fab fa-instagram text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Values Section -->
+    <section class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">Our Values</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    The principles that guide our work and shape our relationships with clients and the community.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="text-center slide-in-left">
+                    <div class="w-20 h-20 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-leaf text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Sustainability</h3>
+                    <p class="text-gray-600">
+                        We use eco-friendly materials and processes, minimizing our environmental impact while creating beautiful pieces.
+                    </p>
+                </div>
+                
+                <div class="text-center slide-in-left">
+                    <div class="w-20 h-20 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-hands-helping text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Community</h3>
+                    <p class="text-gray-600">
+                        We believe in giving back to our community through workshops, education, and supporting local artists.
+                    </p>
+                </div>
+                
+                <div class="text-center slide-in-right">
+                    <div class="w-20 h-20 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-star text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Excellence</h3>
+                    <p class="text-gray-600">
+                        Every piece we create meets our highest standards of quality, craftsmanship, and artistic expression.
+                    </p>
+                </div>
+                
+                <div class="text-center slide-in-right">
+                    <div class="w-20 h-20 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-lightbulb text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Innovation</h3>
+                    <p class="text-gray-600">
+                        We constantly explore new techniques and designs while honoring traditional ceramic arts.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-600 rounded-full flex items-center justify-center mr-3">
+                            <i class="fas fa-mug-hot text-white"></i>
+                        </div>
+                        <span class="text-xl font-bold">Artisan Ceramics</span>
+                    </div>
+                    <p class="text-gray-400">
+                        Creating beautiful ceramics with passion and precision since 1990.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-400 hover:text-amber-400 transition-colors duration-300">Home</a></li>
+                        <li><a href="about.html" class="text-amber-400 font-semibold">About</a></li>
+                        <li><a href="services.html" class="text-gray-400 hover:text-amber-400 transition-colors duration-300">Services</a></li>
+                        <li><a href="contact.html" class="text-gray-400 hover:text-amber-400 transition-colors duration-300">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Services</h4>
+                    <ul class="space-y-2">
+                        <li><a href="services.html" class="text-gray-400 hover:text-amber-400 transition-colors duration-300">Custom Design</a></li>
+                        <li><a href="services.html" class="text-gray-400 hover:text-amber-400 transition-colors duration-300">Restoration</a></li>
+                        <li><a href="services.html" class="text-gray-400 hover:text-amber-400 transition-colors duration-300">Workshops</a></li>
+                        <li><a href="services.html" class="text-gray-400 hover:text-amber-400 transition-colors duration-300">Consultation</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Follow Us</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center hover:bg-amber-700 transition-colors duration-300">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center hover:bg-amber-700 transition-colors duration-300">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center hover:bg-amber-700 transition-colors duration-300">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+             <div class="border-t border-gray-700 mt-8 pt-8 text-center">
+                <p class="text-gray-400">
+                    © 2024 Artisan Ceramics. All rights reserved <a class="text-amber-400" href="https://github.com/Anticoder03" target="_blank"> Anticoder03</a>.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html> 
